@@ -7,6 +7,20 @@ A web-based assessment tool for evaluating AI literacy and competency across six
 
 **Note**: All questions, interface text, and result descriptions are in German.
 
+## About
+
+This AI Literacy Assessment Tool was developed as part of the **WIPRO module** at **HSLU (Hochschule Luzern) Informatik Rotkreuz** under the theme **AI Literacy Bewertungskatalog**. 
+
+The tool provides a comprehensive evaluation framework for assessing AI literacy and competency across six critical dimensions. It combines theoretical knowledge assessment with practical scenario-based questions to validate users' understanding and application of AI concepts in real-world contexts.
+
+The assessment helps individuals and organizations:
+- Identify knowledge gaps in AI literacy
+- Understand competency levels across different AI domains
+- Receive personalized recommendations for skill development
+- Track progress over time through saved results
+
+Developed by **Michael Roos** as an educational tool for evaluating and improving AI competency in professional and academic settings.
+
 ## Features
 
 - **Six Assessment Dimensions**: Covers technical understanding, practical application, critical evaluation, ethics, societal impact, and governance
