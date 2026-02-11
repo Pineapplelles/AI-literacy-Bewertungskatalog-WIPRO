@@ -1,4 +1,10 @@
-import { QUESTIONS_DB, RESULT_TEXTS } from "./data.js";
+import {
+    QUESTIONS_DB,
+    RESULT_TEXTS,
+    UI_TEXTS,
+    DEFAULT_LANGUAGE,
+    SUPPORTED_LANGUAGES
+} from "./data.js";
 
 /**
  * AI Literacy Assessment Application
@@ -36,6 +42,7 @@ const ELEMENT_IDS = {
     USERNAME: 'username',
     START_BTN: 'start-btn',
     ERROR_MSG: 'error-msg',
+    LANGUAGE_SELECT: 'language-select',
     HOME_GRID: 'home-grid',
     QUESTION_CONTAINER: 'question-container',
     HEADER_PROGRESS: 'header-progress',
@@ -61,13 +68,18 @@ const app = {
         currentDimension: null,
         currentStepIndex: 0,
         questionList: [],
-        sessions: {}
+        sessions: {},
+        language: DEFAULT_LANGUAGE,
+        currentScreen: SCREENS.LANDING
     },
 
     /**
      * Initialize the application
      */
     init: function() {
+        this.state.language = this.getInitialLanguage();
+        this.applyStaticTranslations();
+        this.syncLanguageSelector();
         this.showScreen(SCREENS.LANDING);
         this.attachEventListeners();
     },
@@ -79,6 +91,124 @@ const app = {
         const nameInput = document.getElementById(ELEMENT_IDS.USERNAME);
         if (nameInput) {
             nameInput.addEventListener('input', this.validateStart.bind(this));
+        }
+        const languageSelect = document.getElementById(ELEMENT_IDS.LANGUAGE_SELECT);
+        if (languageSelect) {
+            languageSelect.addEventListener('change', (event) => {
+                this.setLanguage(event.target.value);
+            });
+        }
+    },
+
+    getInitialLanguage: function() {
+        const savedLanguage = localStorage.getItem('ai_literacy_language');
+        if (savedLanguage && SUPPORTED_LANGUAGES.includes(savedLanguage)) {
+            return savedLanguage;
+        }
+        return DEFAULT_LANGUAGE;
+    },
+
+    getQuestionsDB: function() {
+        return QUESTIONS_DB[this.state.language] || QUESTIONS_DB[DEFAULT_LANGUAGE];
+    },
+
+    getResultTexts: function() {
+        return RESULT_TEXTS[this.state.language] || RESULT_TEXTS[DEFAULT_LANGUAGE];
+    },
+
+    getUiText: function(key) {
+        const languageTexts = UI_TEXTS[this.state.language] || UI_TEXTS[DEFAULT_LANGUAGE];
+        return languageTexts[key] || key;
+    },
+
+    setLanguage: function(language) {
+        if (!SUPPORTED_LANGUAGES.includes(language)) return;
+        this.state.language = language;
+        localStorage.setItem('ai_literacy_language', language);
+        this.applyStaticTranslations();
+        this.syncLanguageSelector();
+        this.renderAfterLanguageChange();
+    },
+
+    syncLanguageSelector: function() {
+        const languageSelect = document.getElementById(ELEMENT_IDS.LANGUAGE_SELECT);
+        if (languageSelect) {
+            languageSelect.value = this.state.language;
+        }
+    },
+
+    applyStaticTranslations: function() {
+        const updateText = (id, text) => {
+            const element = document.getElementById(id);
+            if (element) element.textContent = text;
+        };
+
+        const updatePlaceholder = (id, text) => {
+            const element = document.getElementById(id);
+            if (element) element.placeholder = text;
+        };
+
+        const htmlLanguage = this.getUiText('htmlLang');
+        document.documentElement.lang = htmlLanguage;
+        document.title = this.getUiText('pageTitle');
+
+        const metaDescription = document.querySelector('meta[name="description"]');
+        if (metaDescription) {
+            metaDescription.setAttribute('content', this.getUiText('metaDescription'));
+        }
+
+        updateText('btn-prev-text', this.getUiText('navPrev'));
+        updateText('btn-next-text', this.getUiText('navNext'));
+        updateText('btn-exit-text', this.getUiText('navExit'));
+        updateText('hero-title', this.getUiText('heroTitle'));
+        updateText('hero-subtitle', this.getUiText('heroSubtitle'));
+        updateText('badge-time-text', this.getUiText('badgeTime'));
+        updateText('badge-anonymous-text', this.getUiText('badgeAnonymous'));
+        updateText('badge-load-text', this.getUiText('badgeLoad'));
+        updateText('username-label', this.getUiText('usernameLabel'));
+        updatePlaceholder(ELEMENT_IDS.USERNAME, this.getUiText('usernamePlaceholder'));
+        updateText('archetype-heading', this.getUiText('archetypeHeading'));
+        updateText('archetype-hint', this.getUiText('archetypeHint'));
+        updateText('card-0-title', this.getUiText('card0Title'));
+        updateText('card-0-desc', this.getUiText('card0Desc'));
+        updateText('card-1-title', this.getUiText('card1Title'));
+        updateText('card-1-desc', this.getUiText('card1Desc'));
+        updateText('card-2-title', this.getUiText('card2Title'));
+        updateText('card-2-desc', this.getUiText('card2Desc'));
+        updateText('card-3-title', this.getUiText('card3Title'));
+        updateText('card-3-desc', this.getUiText('card3Desc'));
+        updateText('method-note-text', this.getUiText('methodNote'));
+        updateText(ELEMENT_IDS.START_BTN, this.getUiText('startButton'));
+        updateText(ELEMENT_IDS.ERROR_MSG, this.getUiText('startError'));
+        updateText('home-title', this.getUiText('homeTitle'));
+        updateText('home-subtitle', this.getUiText('homeSubtitle'));
+        updateText('finish-assessment-btn', this.getUiText('finishAssessmentButton'));
+        updateText('final-title', this.getUiText('finalTitle'));
+        updateText('final-subtitle', this.getUiText('finalSubtitle'));
+        updateText('total-score-label', this.getUiText('totalScoreLabel'));
+        updateText('save-status-text', this.getUiText('savePending'));
+        updateText('new-user-btn', this.getUiText('newUserButton'));
+    },
+
+    renderAfterLanguageChange: function() {
+        if (this.state.currentScreen === SCREENS.HOME) {
+            this.renderHome();
+            return;
+        }
+        if (this.state.currentScreen === SCREENS.QUIZ) {
+            this.renderQuestion();
+            this.updateNavButtons();
+            return;
+        }
+        if (this.state.currentScreen === SCREENS.FINAL) {
+            const container = document.getElementById(ELEMENT_IDS.FINAL_RESULTS_CONTAINER);
+            const summary = document.getElementById(ELEMENT_IDS.FINAL_USER_SUMMARY);
+            if (container && summary) {
+                container.innerHTML = '';
+                this.renderUserSummary(summary);
+                this.renderDimensionResults(container);
+                this.calculateAndDisplayTotalScore();
+            }
         }
     },
 
@@ -139,7 +269,7 @@ const app = {
      * @param {Error} error - Error object
      */
     handleFileLoadError: function(error) {
-        alert("Fehler beim Laden der Datei: " + error.message);
+        alert(this.getUiText('fileLoadError') + error.message);
         console.error("File load error:", error);
     },
 
@@ -214,7 +344,8 @@ const app = {
 
         grid.innerHTML = '';
 
-        Object.values(QUESTIONS_DB).forEach(dimension => {
+        const questionsDb = this.getQuestionsDB();
+        Object.values(questionsDb).forEach(dimension => {
             const cardElement = this.createDimensionCard(dimension);
             grid.appendChild(cardElement);
         });
@@ -249,10 +380,10 @@ const app = {
     applyDimensionCardStatus: function(card, session) {
         if (session && session.status === SESSION_STATUS.COMPLETED) {
             card.classList.add('status-green');
-            card.innerHTML += '<span class="status-badge">Fertig</span>';
+            card.innerHTML += `<span class="status-badge">${this.getUiText('statusDone')}</span>`;
         } else if (session && Object.keys(session.answers).length > 0) {
             card.classList.add('status-yellow');
-            card.innerHTML += '<span class="status-badge">In Bearbeitung</span>';
+            card.innerHTML += `<span class="status-badge">${this.getUiText('statusInProgress')}</span>`;
         }
     },
 
@@ -261,12 +392,13 @@ const app = {
      * @param {string} dimensionId - Dimension identifier
      */
     startDimension: function(dimensionId) {
-        if (!QUESTIONS_DB[dimensionId]) {
+        const questionsDb = this.getQuestionsDB();
+        if (!questionsDb[dimensionId]) {
             console.error(`Dimension ${dimensionId} not found in QUESTIONS_DB`);
             return;
         }
         this.state.currentDimension = dimensionId;
-        this.state.questionList = QUESTIONS_DB[dimensionId].items;
+        this.state.questionList = questionsDb[dimensionId].items;
         this.state.currentStepIndex = 0;
 
         if (!this.state.sessions[dimensionId]) {
@@ -286,6 +418,7 @@ const app = {
      * @param {string} screenName - Name of the screen to show
      */
     showScreen: function(screenName) {
+        this.state.currentScreen = screenName;
         document.querySelectorAll('.content-area').forEach(element => {
             element.classList.add('hidden');
         });
@@ -374,8 +507,8 @@ const app = {
             <div class="likert-container">
                 <div class="likert-buttons">${buttons}</div>
                 <div class="likert-labels">
-                    <span class="likert-label-left">Stimme nicht zu</span>
-                    <span class="likert-label-right">Stimme voll zu</span>
+                    <span class="likert-label-left">${this.getUiText('likertLeft')}</span>
+                    <span class="likert-label-right">${this.getUiText('likertRight')}</span>
                 </div>
             </div>
         `;
@@ -464,7 +597,11 @@ const app = {
         const answeredCount = Object.keys(answers).length;
         const currentQuestion = this.state.currentStepIndex + 1;
 
-        progressElement.innerText = `Frage ${currentQuestion} von ${total} (Beantwortet: ${answeredCount})`;
+        const progressText = this.getUiText('progressLabel')
+            .replace('{current}', String(currentQuestion))
+            .replace('{total}', String(total))
+            .replace('{answered}', String(answeredCount));
+        progressElement.innerText = progressText;
     },
 
     /**
@@ -572,7 +709,7 @@ const app = {
     validateAllDimensionsCompleted: function() {
         for (const [dimensionId, session] of Object.entries(this.state.sessions)) {
             if (session.status === SESSION_STATUS.IN_PROGRESS) {
-                alert("Fehler: Bitte schließen Sie alle begonnenen Dimensionen ab ('In Bearbeitung').");
+                alert(this.getUiText('validateInProgressError'));
                 return false;
             }
         }
@@ -585,12 +722,13 @@ const app = {
      */
     renderUserSummary: function(summaryElement) {
         const selfAssessmentLevel = this.state.user.selfAssessment;
-        const levelText = RESULT_TEXTS[selfAssessmentLevel];
+        const resultTexts = this.getResultTexts();
+        const levelText = resultTexts[selfAssessmentLevel];
         const levelTitle = levelText ? levelText.title : `Level ${selfAssessmentLevel}`;
 
         summaryElement.innerHTML = `
-            <strong>Teilnehmer:</strong> ${this.state.user.name}<br>
-            <strong>Selbsteinschätzung:</strong> ${levelTitle}
+            <strong>${this.getUiText('participantLabel')}</strong> ${this.state.user.name}<br>
+            <strong>${this.getUiText('selfAssessmentLabel')}</strong> ${levelTitle}
         `;
     },
 
@@ -609,13 +747,13 @@ const app = {
 
             dimensionsProcessed++;
             const result = this.calculateDimensionScore(dimensionId, session.answers);
-            const dimensionInfo = QUESTIONS_DB[dimensionId];
+            const dimensionInfo = this.getQuestionsDB()[dimensionId];
             const resultCard = this.createResultCard(dimensionInfo, result);
             container.appendChild(resultCard);
         }
 
         if (dimensionsProcessed === 0) {
-            container.innerHTML = "<p>Noch keine Dimensionen vollständig bearbeitet.</p>";
+            container.innerHTML = `<p>${this.getUiText('noDimensionsCompleted')}</p>`;
         }
     },
 
@@ -635,9 +773,9 @@ const app = {
             : '';
 
         card.innerHTML = `
-            <h3>${dimensionInfo.title} <span class="score-display">Level ${result.level}</span></h3>
+            <h3>${dimensionInfo.title} <span class="score-display">${this.getUiText('levelLabel')} ${result.level}</span></h3>
             <div class="level-summary-sentence">${resultText.title}</div>
-            <p><em>Likert-Schnitt: ${result.meanScore.toFixed(1)} | Gatekeeper: ${result.gatekeeperScore}/${GATEKEEPER_MAX}</em></p>
+            <p><em>${this.getUiText('likertAverageLabel')}: ${result.meanScore.toFixed(1)} | ${this.getUiText('gatekeeperLabel')}: ${result.gatekeeperScore}/${GATEKEEPER_MAX}</em></p>
             <p>${resultText.description}</p>
             <p class="action-text">${resultText.action}</p>
             ${warningHTML}
@@ -652,10 +790,11 @@ const app = {
      * @returns {Object} Result text object
      */
     getResultText: function(result) {
-        if (result.downgraded && RESULT_TEXTS[`${result.level}_downgrade`]) {
-            return RESULT_TEXTS[`${result.level}_downgrade`];
+        const texts = this.getResultTexts();
+        if (result.downgraded && texts[`${result.level}_downgrade`]) {
+            return texts[`${result.level}_downgrade`];
         }
-        return RESULT_TEXTS[String(result.level)] || RESULT_TEXTS["0"];
+        return texts[String(result.level)] || texts["0"];
     },
 
     /**
@@ -694,7 +833,8 @@ const app = {
      * @returns {Object} Score result object
      */
     calculateDimensionScore: function(dimensionId, answers) {
-        if (!QUESTIONS_DB[dimensionId]) {
+        const questionsDb = this.getQuestionsDB();
+        if (!questionsDb[dimensionId]) {
             console.error(`Dimension ${dimensionId} not found in QUESTIONS_DB`);
             return {
                 level: 0,
@@ -704,7 +844,7 @@ const app = {
                 downgraded: false
             };
         }
-        const questions = QUESTIONS_DB[dimensionId].items;
+        const questions = questionsDb[dimensionId].items;
         let likertSum = 0;
         let likertCount = 0;
         let gatekeeperScore = 0;
@@ -747,7 +887,7 @@ const app = {
             if (gatekeeperScore === 0) {
                 return {
                     level: 1,
-                    downgradeReason: "Kritisch: Solides Selbstbild, aber bei beiden Sicherheitsfragen durchgefallen.",
+                    downgradeReason: this.getUiText('downgradeLowGatekeeper'),
                     downgraded: true
                 };
             }
@@ -761,7 +901,7 @@ const app = {
 
         return {
             level: 2,
-            downgradeReason: "Abweichung: Hohe Selbsteinschätzung, aber Sicherheitslücken in den Szenarien.",
+            downgradeReason: this.getUiText('downgradeHighMismatch'),
             downgraded: true
         };
     },
@@ -788,7 +928,7 @@ const app = {
                 const responseJson = await response.json();
                 this.displaySaveSuccess(statusBox, responseJson.path);
             } else {
-                throw new Error("Server antwortete mit Fehler.");
+                throw new Error(this.getUiText('saveServerUnavailable'));
             }
         } catch (error) {
             console.error("Save error:", error);
@@ -829,7 +969,7 @@ const app = {
     displaySaveSuccess: function(statusBox, filePath) {
         statusBox.innerHTML = `
             <span class="status-icon" style="color:var(--success-color)">&#10004;</span>
-            <div class="status-text" style="font-weight:bold; color:var(--success-color)">Gespeichert!</div>
+            <div class="status-text" style="font-weight:bold; color:var(--success-color)">${this.getUiText('saveSuccess')}</div>
             <div class="path-text">${filePath}</div>
         `;
     },
@@ -841,8 +981,8 @@ const app = {
     displaySaveError: function(statusBox) {
         statusBox.innerHTML = `
             <span class="status-icon" style="color:var(--warning-color)">⚠️</span>
-            <div class="status-text">Server nicht erreichbar.</div>
-            <button class="download-btn" onclick="app.manualDownload()">Manuell herunterladen</button>
+            <div class="status-text">${this.getUiText('saveServerUnavailable')}</div>
+            <button class="download-btn" onclick="app.manualDownload()">${this.getUiText('manualDownloadButton')}</button>
         `;
     },
 

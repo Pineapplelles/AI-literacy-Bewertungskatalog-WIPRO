@@ -19,7 +19,7 @@ ENCODING = "utf-8"
 # Ensure results directory exists
 if not os.path.exists(RESULTS_DIR):
     os.makedirs(RESULTS_DIR)
-    print(f"📁 Created directory: {RESULTS_DIR}")
+    print(f"[INFO] Created directory: {RESULTS_DIR}")
 
 
 class CustomHandler(http.server.SimpleHTTPRequestHandler):
@@ -53,13 +53,13 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
             self.send_success_response(filepath)
 
         except json.JSONDecodeError as e:
-            print(f"❌ JSON decode error: {e}")
+            print(f"[ERROR] JSON decode error: {e}")
             self.send_error_response(400, "Invalid JSON data")
         except ValueError as e:
-            print(f"❌ Validation error: {e}")
+            print(f"[ERROR] Validation error: {e}")
             self.send_error_response(400, str(e))
         except Exception as e:
-            print(f"❌ Unexpected error: {e}")
+            print(f"[ERROR] Unexpected error: {e}")
             self.send_error_response(500, "Internal server error")
 
     def generate_safe_filepath(self, data: Dict[str, Any]) -> str:
@@ -88,7 +88,7 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
         """
         with open(filepath, 'w', encoding=ENCODING) as file:
             json.dump(data, file, ensure_ascii=False, indent=2)
-        print(f"✅ Ergebnis gespeichert: {filepath}")
+        print(f"[OK] Ergebnis gespeichert: {filepath}")
 
     def send_success_response(self, filepath: str) -> None:
         """
@@ -143,17 +143,17 @@ def main() -> None:
     """
     Start the HTTP server
     """
-    print(f"🚀 Server läuft auf http://localhost:{PORT}")
-    print(f"📂 Ergebnisse werden gespeichert in: ./{RESULTS_DIR}/")
+    print(f"[INFO] Server laeuft auf http://localhost:{PORT}")
+    print(f"[INFO] Ergebnisse werden gespeichert in: ./{RESULTS_DIR}/")
     print("Drücken Sie Ctrl+C zum Beenden\n")
 
     try:
         with socketserver.TCPServer(("", PORT), CustomHandler) as httpd:
             httpd.serve_forever()
     except KeyboardInterrupt:
-        print("\n\n👋 Server wird beendet...")
+        print("\n\n[INFO] Server wird beendet...")
     except Exception as e:
-        print(f"❌ Server-Fehler: {e}")
+        print(f"[ERROR] Server-Fehler: {e}")
 
 
 if __name__ == "__main__":

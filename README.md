@@ -100,9 +100,12 @@ The current repository provides a functional prototype with:
 - JSON export and import for assessment results
 - Lightweight local Python server for result persistence
 - Responsive and accessible frontend structure
+- Bilingual assessment content (English and German)
 
-**Language note:** The current assessment questions, interface text, and result descriptions are in German.
-The conceptual model is language-independent; only the prototype implementation is currently localized in German.
+**Language note:** The conceptual model is language-independent and the prototype currently supports English and German.
+
+**How to toggle language:** Use the `EN/DE` selector on the landing page (top area next to the badges).  
+English is the default language at startup.
 
 ## Interface Screenshots
 

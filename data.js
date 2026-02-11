@@ -3,7 +3,7 @@
  * Contains all assessment questions and result descriptions
  */
 
-export const QUESTIONS_DB = {
+export const QUESTIONS_DB_DE = {
     dimension1: {
         id: "dimension1",
         title: "Dimension 1 Technisches Verständnis & Datenkompetenz",
@@ -497,7 +497,7 @@ export const QUESTIONS_DB = {
     }
 };
 
-export const RESULT_TEXTS = {
+export const RESULT_TEXTS_DE = {
     "0": {
         title: "Der Entdecker (Novice) Level 0",
         description: "Sie stehen am Anfang. Fokus liegt auf Wissensaufbau.",
@@ -522,5 +522,359 @@ export const RESULT_TEXTS = {
         title: "Der Gestalter (Expert) Level 3",
         description: "Sie beherrschen Technik, Ethik und Governance auf Top-Niveau.",
         action: "Empfehlung: Werden Sie AI-Mentor für Ihr Team."
+    }
+};
+
+export const QUESTIONS_DB_EN = {
+    dimension1: {
+        id: "dimension1",
+        title: "Dimension 1: Technical Understanding & Data Competence",
+        desc: "Fundamentals, model behavior, hallucinations, and data flow.",
+        items: [
+            { id: "d1_q1", type: "likert", text: "I understand that generative AI produces responses based on probabilities and does not possess factual knowledge." },
+            { id: "d1_q2", type: "likert", text: "I generally assume AI responses may sound plausible but can still be fabricated." },
+            { id: "d1_q3", type: "likert", text: "I am aware that AI models only operate within their training scope and do not have true reasoning." },
+            { id: "d1_q4", type: "likert", text: "I know that AI models (without live web access) cannot know events after their training cutoff." },
+            { id: "d1_q5", type: "likert", text: "I can distinguish between public, internal, and strictly confidential data." },
+            { id: "d1_q6", type: "likert", text: "I understand that inputs to public AI tools trigger external data processing (data leaves the organization)." },
+            { id: "d1_q7", type: "likert", text: "I am aware that my inputs may be stored by providers and potentially used for model training." },
+            {
+                id: "d1_gk1",
+                type: "scenario",
+                text: "Scenario: You upload an internal PDF with an unpublished annual report to a public AI tool to get a summary.",
+                options: [
+                    { id: "a", text: "Low risk, because the AI only processes numbers.", value: 0 },
+                    { id: "b", text: "Confidential information is transferred to external systems (data protection risk).", value: 1 },
+                    { id: "c", text: "The AI could calculate incorrectly.", value: 0 }
+                ]
+            },
+            {
+                id: "d1_gk2",
+                type: "scenario",
+                text: "Scenario: You ask AI for '5 scientific sources on AI ethics'. It provides a perfect-looking list of titles and authors.",
+                options: [
+                    { id: "a", text: "I use the sources directly, because AI has database access.", value: 0 },
+                    { id: "b", text: "I verify each source (DOI/link), because AI can mix real authors with invented titles.", value: 1 },
+                    { id: "c", text: "I only use the summaries, not the titles.", value: 0 }
+                ]
+            }
+        ]
+    },
+    dimension2: {
+        id: "dimension2",
+        title: "Dimension 2: Practical Application & Tool Usage",
+        desc: "Prompting strategies, iteration, and human-in-the-loop practices.",
+        items: [
+            { id: "d2_q1", type: "likert", text: "I usually formulate prompts with context, objective, and output format (instead of keywords only)." },
+            { id: "d2_q2", type: "likert", text: "If an output is not suitable, I refine my prompt instead of simply regenerating." },
+            { id: "d2_q3", type: "likert", text: "I use AI for drafts and ideas, but avoid it for tasks requiring high factual precision." },
+            { id: "d2_q4", type: "likert", text: "I use AI efficiently to transform content (for example, turning notes into a table)." },
+            { id: "d2_q5", type: "likert", text: "I treat AI outputs as draft material and almost always review them critically." },
+            { id: "d2_q6", type: "likert", text: "I have integrated AI into workflows in a way that creates repeatable value." },
+            {
+                id: "d2_gk1",
+                type: "scenario",
+                text: "Scenario: You need ideas for a marketing slogan. The first AI result is too generic.",
+                options: [
+                    { id: "a", text: "I regenerate and hope for a better random output.", value: 0 },
+                    { id: "b", text: "I refine the prompt (tone, examples, constraints) to steer the output.", value: 1 },
+                    { id: "c", text: "I write it myself, AI cannot do this.", value: 0 }
+                ]
+            },
+            {
+                id: "d2_gk2",
+                type: "scenario",
+                text: "Scenario: AI drafts a very polite email to an upset customer.",
+                options: [
+                    { id: "a", text: "I quickly check spelling and send it.", value: 0 },
+                    { id: "b", text: "I verify content commitments and tone against internal rules before sending.", value: 1 },
+                    { id: "c", text: "I do not use the text because AI has no empathy.", value: 0 }
+                ]
+            }
+        ]
+    },
+    dimension3: {
+        id: "dimension3",
+        title: "Dimension 3: Critical Evaluation of AI Outputs",
+        desc: "Validation, bias detection, and accountability.",
+        items: [
+            { id: "d3_q1", type: "likert", text: "I challenge AI results by default, even when they sound convincing." },
+            { id: "d3_q2", type: "likert", text: "For factual claims, I always verify with an external primary source." },
+            { id: "d3_q3", type: "likert", text: "I actively check outputs for hidden bias and stereotypes." },
+            { id: "d3_q4", type: "likert", text: "I can identify logical errors even when the text appears well written." },
+            { id: "d3_q5", type: "likert", text: "I deliberately check content for outdated information (knowledge cutoff)." },
+            { id: "d3_q6", type: "likert", text: "I understand that I remain professionally responsible if I use AI outputs without verification." },
+            {
+                id: "d3_gk1",
+                type: "scenario",
+                text: "Scenario: You are unsure about a detail in an AI answer. How do you validate it?",
+                options: [
+                    { id: "a", text: "I ask the AI itself for confirmation ('Are you sure?').", value: 0 },
+                    { id: "b", text: "I verify the fact using an external source (triangulation).", value: 1 },
+                    { id: "c", text: "If it sounds professional, I trust it.", value: 0 }
+                ]
+            },
+            {
+                id: "d3_gk2",
+                type: "scenario",
+                text: "Scenario: AI suggests 'dominance and no family constraints' as leadership criteria.",
+                options: [
+                    { id: "a", text: "Use it, because AI relies on objective success data.", value: 0 },
+                    { id: "b", text: "Review critically: this can reflect historical bias.", value: 1 },
+                    { id: "c", text: "Never use AI in HR at all.", value: 0 }
+                ]
+            }
+        ]
+    },
+    dimension4: {
+        id: "dimension4",
+        title: "Dimension 4: Ethics, Rights & Data Protection",
+        desc: "Privacy, copyright, and fairness.",
+        items: [
+            { id: "d4_q1", type: "likert", text: "I know that names or customer data must never be entered unprotected into public AI tools." },
+            { id: "d4_q2", type: "likert", text: "I transparently label AI-generated content when publishing externally." },
+            { id: "d4_q3", type: "likert", text: "I am aware that AI content can involve legal risks (for example copyright)." },
+            { id: "d4_q4", type: "likert", text: "For professional use, I only use AI tools approved by IT/compliance." },
+            { id: "d4_q5", type: "likert", text: "I actively respond when AI outputs appear discriminatory or unfair." },
+            { id: "d4_q6", type: "likert", text: "I do not automate decisions about people without human review." },
+            {
+                id: "d4_gk1",
+                type: "scenario",
+                text: "Scenario: Enter meeting notes with customer names into a public AI tool?",
+                options: [
+                    { id: "a", text: "I instruct the AI to treat the data confidentially.", value: 0 },
+                    { id: "b", text: "I anonymize the data first or use enterprise tools.", value: 1 },
+                    { id: "c", text: "I delete the chat right afterwards.", value: 0 }
+                ]
+            },
+            {
+                id: "d4_gk2",
+                type: "scenario",
+                text: "Scenario: Generate a marketing image in the style of a living artist?",
+                options: [
+                    { id: "a", text: "Use it, because AI images are free of rights.", value: 0 },
+                    { id: "b", text: "Check legal implications or change the style (risk avoidance).", value: 1 },
+                    { id: "c", text: "Leave out the name but copy the style.", value: 0 }
+                ]
+            }
+        ]
+    },
+    dimension5: {
+        id: "dimension5",
+        title: "Dimension 5: Societal Impact & Sustainability",
+        desc: "Sustainability, misinformation, and workplace impact.",
+        items: [
+            { id: "d5_q1", type: "likert", text: "I am aware that AI queries can consume significantly more resources than classic tools." },
+            { id: "d5_q2", type: "likert", text: "I assess whether simpler tools are more efficient than AI for a given task (proportionality)." },
+            { id: "d5_q3", type: "likert", text: "I am aware of deepfake risks and do not share content without verification." },
+            { id: "d5_q4", type: "likert", text: "I actively reflect on how AI changes my professional role." },
+            { id: "d5_q5", type: "likert", text: "I know that AI models can reflect cultural bias and distort non-dominant perspectives." },
+            { id: "d5_q6", type: "likert", text: "I treat AI as a tool and do not attribute human emotions to it." },
+            {
+                id: "d5_gk1",
+                type: "scenario",
+                text: "Scenario: You want to calculate 15% of 4500. Which tool do you choose?",
+                options: [
+                    { id: "a", text: "AI chatbot (for convenience).", value: 0 },
+                    { id: "b", text: "Calculator or Excel.", value: 1 },
+                    { id: "c", text: "Web search.", value: 0 }
+                ]
+            },
+            {
+                id: "d5_gk2",
+                type: "scenario",
+                text: "Scenario: A viral scandal photo of a competitor appears online.",
+                options: [
+                    { id: "a", text: "Share/warn immediately.", value: 0 },
+                    { id: "b", text: "Check sources and image authenticity for AI manipulation traces.", value: 1 },
+                    { id: "c", text: "Ignore it completely (general distrust).", value: 0 }
+                ]
+            }
+        ]
+    },
+    dimension6: {
+        id: "dimension6",
+        title: "Dimension 6: Risk, Human Oversight & Governance",
+        desc: "Risk classification, human oversight, and compliance.",
+        items: [
+            { id: "d6_q1", type: "likert", text: "I accept that I have final accountability in AI-supported decisions (human oversight)." },
+            { id: "d6_q2", type: "likert", text: "I can distinguish between low-risk and high-risk AI applications." },
+            { id: "d6_q3", type: "likert", text: "I know whom to report systematic AI errors to." },
+            { id: "d6_q4", type: "likert", text: "I follow internal policies or best practices, even when they require more effort." },
+            { id: "d6_q5", type: "likert", text: "I document critical AI-supported decisions in a traceable way." },
+            { id: "d6_q6", type: "likert", text: "I never excuse errors with 'the AI was at fault'." },
+            {
+                id: "d6_gk1",
+                type: "scenario",
+                text: "Scenario: AI in recruiting (pre-selection and rejection support). What is the right approach?",
+                options: [
+                    { id: "a", text: "AI decides autonomously (efficiency).", value: 0 },
+                    { id: "b", text: "AI supports pre-selection, but I decide and review personally.", value: 1 },
+                    { id: "c", text: "Never use AI in this context (manual only).", value: 0 }
+                ]
+            },
+            {
+                id: "d6_gk2",
+                type: "scenario",
+                text: "Scenario: A chatbot systematically promises incorrect discounts.",
+                options: [
+                    { id: "a", text: "Hide/delete the error.", value: 0 },
+                    { id: "b", text: "Report immediately and stop usage.", value: 1 },
+                    { id: "c", text: "Ignore it (not my responsibility).", value: 0 }
+                ]
+            }
+        ]
+    }
+};
+
+export const RESULT_TEXTS_EN = {
+    "0": {
+        title: "Explorer (Novice) Level 0",
+        description: "You are at an early stage. The focus is on building core understanding.",
+        action: "Recommendation: Start with a foundational AI literacy course."
+    },
+    "1": {
+        title: "Observer (Awareness) Level 1",
+        description: "You know key concepts but still apply them inconsistently.",
+        action: "Recommendation: Use AI on low-risk tasks to build practical confidence."
+    },
+    "1_downgrade": {
+        title: "Risk Warning (Awareness) Level 1",
+        description: "Your self-assessment was high, but critical safety scenarios were answered incorrectly. The score was adjusted.",
+        action: "Urgent: Repeat the data protection and compliance unit."
+    },
+    "2": {
+        title: "Practitioner Level 2",
+        description: "You use AI responsibly and effectively in daily work.",
+        action: "Recommendation: Deepen your practice with advanced prompting and evaluation patterns."
+    },
+    "3": {
+        title: "Governance-Aligned (Expert) Level 3",
+        description: "You demonstrate strong integrated technical, ethical, and governance competence.",
+        action: "Recommendation: Act as an AI mentor for your team."
+    }
+};
+
+export const QUESTIONS_DB = {
+    en: QUESTIONS_DB_EN,
+    de: QUESTIONS_DB_DE
+};
+
+export const RESULT_TEXTS = {
+    en: RESULT_TEXTS_EN,
+    de: RESULT_TEXTS_DE
+};
+
+export const DEFAULT_LANGUAGE = "en";
+export const SUPPORTED_LANGUAGES = ["en", "de"];
+
+export const UI_TEXTS = {
+    en: {
+        htmlLang: "en",
+        metaDescription: "AI Literacy Assessment Framework - evaluate AI competency and governance readiness",
+        pageTitle: "AI Literacy Readiness Framework",
+        navPrev: "Back",
+        navNext: "Next",
+        navExit: "Exit",
+        heroTitle: "AI Literacy Check",
+        heroSubtitle: "Assess your readiness for responsible use of artificial intelligence.",
+        badgeTime: "10 min",
+        badgeAnonymous: "Anonymous",
+        badgeLoad: "Load result",
+        usernameLabel: "Your Name / ID:",
+        usernamePlaceholder: "e.g., Alex Example",
+        archetypeHeading: "How do you currently assess yourself?",
+        archetypeHint: "Click the profile that best matches your current behavior.",
+        card0Title: "Explorer",
+        card0Desc: "I rarely use AI. I want to understand the basics and feel unsure about outputs.",
+        card1Title: "Observer",
+        card1Desc: "I know key risks, but I mostly use AI for simple tasks and do not validate systematically.",
+        card2Title: "Practitioner",
+        card2Desc: "I use AI safely in daily work, prompt intentionally, and evaluate outputs critically.",
+        card3Title: "Architect",
+        card3Desc: "I recognize complex risks (bias, privacy), take responsibility, and guide others.",
+        methodNote: "Your self-assessment is validated through practical scenario questions.",
+        startButton: "Start Assessment",
+        startError: "Please select a profile and enter a name.",
+        homeTitle: "Dashboard",
+        homeSubtitle: "Select a dimension to continue.",
+        finishAssessmentButton: "Show & Save Results",
+        finalTitle: "Assessment Results",
+        finalSubtitle: "Summary of your competencies",
+        totalScoreLabel: "Your Overall Level",
+        savePending: "Saving results...",
+        newUserButton: "New User",
+        statusDone: "Done",
+        statusInProgress: "In Progress",
+        likertLeft: "Strongly disagree",
+        likertRight: "Strongly agree",
+        progressLabel: "Question {current} of {total} (Answered: {answered})",
+        validateInProgressError: "Please complete all started dimensions marked as 'In Progress'.",
+        participantLabel: "Participant:",
+        selfAssessmentLabel: "Self-assessment:",
+        noDimensionsCompleted: "No dimensions completed yet.",
+        levelLabel: "Level",
+        likertAverageLabel: "Likert Avg",
+        gatekeeperLabel: "Gatekeeper",
+        downgradeLowGatekeeper: "Critical: Strong self-view, but failed both safety scenarios.",
+        downgradeHighMismatch: "Mismatch: High self-assessment, but safety gaps in scenarios.",
+        fileLoadError: "Error loading file: ",
+        saveSuccess: "Saved!",
+        saveServerUnavailable: "Server unavailable.",
+        manualDownloadButton: "Download manually"
+    },
+    de: {
+        htmlLang: "de",
+        metaDescription: "AI Literacy Assessment Tool - Ermitteln Sie Ihren Reifegrad im Umgang mit Künstlicher Intelligenz",
+        pageTitle: "AI Literacy Assessment Tool",
+        navPrev: "Zuruck",
+        navNext: "Weiter",
+        navExit: "Exit",
+        heroTitle: "AI Literacy Check",
+        heroSubtitle: "Ermitteln Sie Ihren Reifegrad im Umgang mit Kunstlicher Intelligenz.",
+        badgeTime: "10 Min",
+        badgeAnonymous: "Anonym",
+        badgeLoad: "Ergebnis laden",
+        usernameLabel: "Ihr Name / ID:",
+        usernamePlaceholder: "z. B. Max Mustermann",
+        archetypeHeading: "Wie schatzen Sie sich aktuell ein?",
+        archetypeHint: "Klicken Sie auf das Profil, das am ehesten auf Sie zutrifft.",
+        card0Title: "Der Entdecker",
+        card0Desc: "Ich nutze KI selten. Ich mochte Grundlagen verstehen und bin unsicher bei den Ergebnissen.",
+        card1Title: "Der Beobachter",
+        card1Desc: "Ich kenne Risiken, nutze KI aber nur fur einfache Aufgaben und prufe nicht systematisch.",
+        card2Title: "Der Anwender",
+        card2Desc: "Ich nutze KI sicher im Alltag, prompt bewusst und prufe Ergebnisse kritisch.",
+        card3Title: "Der Gestalter",
+        card3Desc: "Ich erkenne komplexe Risiken (Bias, Datenschutz), ubernehme Verantwortung und leite andere an.",
+        methodNote: "Ihre Selbsteinschatzung wird im Test durch Praxis-Szenarien validiert.",
+        startButton: "Assessment Starten",
+        startError: "Bitte wahlen Sie ein Profil und geben Sie einen Namen ein.",
+        homeTitle: "Dashboard",
+        homeSubtitle: "Wahlen Sie einen Bereich zur Bearbeitung.",
+        finishAssessmentButton: "Ergebnisse anzeigen & Speichern",
+        finalTitle: "Assessment Ergebnisse",
+        finalSubtitle: "Zusammenfassung Ihrer Kompetenzen",
+        totalScoreLabel: "Ihr Gesamt-Level",
+        savePending: "Speichere Ergebnisse...",
+        newUserButton: "Neuer Benutzer",
+        statusDone: "Fertig",
+        statusInProgress: "In Bearbeitung",
+        likertLeft: "Stimme nicht zu",
+        likertRight: "Stimme voll zu",
+        progressLabel: "Frage {current} von {total} (Beantwortet: {answered})",
+        validateInProgressError: "Fehler: Bitte schliessen Sie alle begonnenen Dimensionen ab ('In Bearbeitung').",
+        participantLabel: "Teilnehmer:",
+        selfAssessmentLabel: "Selbsteinschatzung:",
+        noDimensionsCompleted: "Noch keine Dimensionen vollstandig bearbeitet.",
+        levelLabel: "Level",
+        likertAverageLabel: "Likert-Schnitt",
+        gatekeeperLabel: "Gatekeeper",
+        downgradeLowGatekeeper: "Kritisch: Solides Selbstbild, aber bei beiden Sicherheitsfragen durchgefallen.",
+        downgradeHighMismatch: "Abweichung: Hohe Selbsteinschatzung, aber Sicherheitslucken in den Szenarien.",
+        fileLoadError: "Fehler beim Laden der Datei: ",
+        saveSuccess: "Gespeichert!",
+        saveServerUnavailable: "Server nicht erreichbar.",
+        manualDownloadButton: "Manuell herunterladen"
     }
 };
